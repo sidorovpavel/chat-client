@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import {
 	MESSAGE_HISTORY,
-	MESSAGE_SEND, MESSAGE_SHIFT, NUMBER_LOADED_MESSAGES, NUMBER_SHIFT_MESSAGES,
+	MESSAGE_SEND, MESSAGE_SHIFT, NUMBER_LOADED_MESSAGES, NUMBER_SHIFT_MESSAGES, NUMBER_VISIBLE_MESSAGES,
 	USER_CONNECTED,
 	USER_DISCONNECTED,
 	USER_VERIFY
@@ -16,6 +16,7 @@ export const createSocketIO = (socketUrl) =>  {
 			transports: ['websocket', 'polling']
 		});
 
+	let loadingHistory = false;
 
 	return ({getState, dispatch}) => next => action => {
 
@@ -34,9 +35,10 @@ export const createSocketIO = (socketUrl) =>  {
 					dispatch(messageNew(message))
 				});
 				socket.on(MESSAGE_HISTORY, (messages) => {
+					loadingHistory = false;
 					dispatch(messagesHistory(messages))
-				})
-				socket.emit(USER_CONNECTED, {user, historyLimit: NUMBER_LOADED_MESSAGES});
+				});
+				socket.emit(USER_CONNECTED, {user, historyLimit: NUMBER_VISIBLE_MESSAGES});
 			}
 		};
 
@@ -48,8 +50,9 @@ export const createSocketIO = (socketUrl) =>  {
 				socket.emit(MESSAGE_SEND, action.payload);
 				return false;
 			case MESSAGE_SHIFT:
-				if(!getState().allLoaded && getState().indexVisibleMessageId < NUMBER_SHIFT_MESSAGES * 3) {
-					socket.emit(MESSAGE_HISTORY, {})
+				if(!loadingHistory && !getState().allLoaded && getState().indexVisibleMessageId < NUMBER_SHIFT_MESSAGES * 5) {
+					loadingHistory = true;
+					socket.emit(MESSAGE_HISTORY, NUMBER_LOADED_MESSAGES)
 				}
 				return next(action);
 			default: return next(action);

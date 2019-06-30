@@ -6,7 +6,7 @@ import {Message} from "../../components/Message";
 import {NUMBER_SHIFT_MESSAGES} from "../../store/const";
 import {getIsReachedBegin, getIsReachedEnd} from "../../store/selectors";
 
-const SHIFT_OFFSET_PERCENT = 20;
+const SHIFT_OFFSET_PERCENT = 15;
 
 class ChatRoom extends Component {
 	constructor(props) {
@@ -30,7 +30,7 @@ class ChatRoom extends Component {
 
 	handleScroll = (e) => {
 		const {scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-		const shiftOffset =  Math.round(clientHeight * SHIFT_OFFSET_PERCENT / 100);
+		const shiftOffset =  Math.round(scrollHeight * SHIFT_OFFSET_PERCENT / 100);
 		if (this.prevScrollTop === scrollTop) {
 			return;
 		}
@@ -94,11 +94,10 @@ class ChatRoom extends Component {
 			wrapper.scrollTop = wrapper.scrollHeight - wrapper.clientHeight;
 			this.prevScrollTop = wrapper.scrollTop;
 		}
-		this.isShifting = false;
 		if (this.props.isLiveMode) {
 			wrapper.scrollTop = wrapper.scrollHeight - wrapper.clientHeight;
 		} else if (snapshot !== null && (snapshot.scrollTop === wrapper.scrollTop)) {
-			const elem = wrapper.firstChil
+			const elem = wrapper.firstChild;
 			let index = 0;
 			const prevFirstId = prevProps.messages[0].id,
 				prevLastId = prevProps.messages[prevProps.messages.length - 1].id;
@@ -121,8 +120,15 @@ class ChatRoom extends Component {
 					wrapper.scrollTop += elementTop - snapshot.lastMessageTop;
 				}
 			}
-
 		}
+		if (this.isShifting) {
+			if ((wrapper.scrollTop === 0) && !this.props.reachedBegin) {
+				this.props.messageShift(-NUMBER_SHIFT_MESSAGES);
+			} else if((wrapper.scrollTop + wrapper.scrollHeight === wrapper.clientHeight) && !this.props.reachedEnd) {
+				this.props.messageShift(NUMBER_SHIFT_MESSAGES);
+			}
+		}
+		this.isShifting = false;
 	}
 
 	render() {
