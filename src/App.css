@@ -1,5 +1,17 @@
-.App {
+.app {
   text-align: center;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.chat {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  height: 100vh;
 }
 
 .App-logo {

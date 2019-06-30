@@ -1,0 +1,15 @@
+div.login-form{
+    display: block;
+    padding: 100px;
+    width: 200px;
+    height: 200px;
+    margin: 0;
+    background-color: lightgreen;
+}
+.login-form label{
+    padding-right: 10px;
+}
+.error {
+    color: red;
+    height: 30px;
+}

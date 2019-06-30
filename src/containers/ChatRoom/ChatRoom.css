@@ -1,0 +1,56 @@
+.chat-room {
+    display: block;
+    height: 100vh;
+    width: 100%;
+    margin: 10px;
+    padding: 0;
+}
+.chat-room h3{
+    height: 20px;
+    padding: 0;
+    margin: 0 0 10px;
+}
+.chat-room form{
+    height: 20px;
+}
+
+.wrapper {
+    border: #e0e0e0 1px solid;
+    height: calc(100% - 90px);
+    overflow: auto;
+}
+
+.messages {
+    overflow-y: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.sender {
+    border: #e0e0e0 1px solid;
+    height: 26px;
+    margin: 0;
+    padding: 0;
+}
+
+.sender form {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+
+.sender input[type='text']{
+    height: 100%;
+    width: calc(100% - 135px);
+    margin:  0;
+    padding: 0;
+    border: none;
+}
+
+.sender input[type='submit']{
+    -webkit-appearance: none;
+    height: 100%;
+    width: 100px;
+    margin: 0 10px;
+}

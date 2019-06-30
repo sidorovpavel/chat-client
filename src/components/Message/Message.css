@@ -1,0 +1,12 @@
+.message{
+    list-style-type: none;
+    display: block;
+    text-align: left;
+    padding: 2px 10px;
+}
+.date{
+    font-size: small;
+}
+.nick {
+    font-weight: bold;
+}

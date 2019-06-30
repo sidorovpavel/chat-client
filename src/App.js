@@ -1,26 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import io from 'socket.io-client';
+import {connect} from 'react-redux';
+import {LoginForm} from './containers/LoginForm/'
+import {ChatRoom} from './containers/ChatRoom'
+import {UserList} from './containers/UserList'
+import './App.css'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+const socketUrl = "http://192.168.1.16:4000";
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      socket: null
+    };
+  }
+
+
+  initConnect = () => {
+    const socket = io(socketUrl);
+    socket.on('connect', () => {
+      console.log('connected');
+    })
+    this.setState({socket});
+  }
+
+  login = (user) => {
+    const { socket } = this.state;
+    socket.emit('USER_CONNECTED', user);
+    this.setState({user});
+  }
+
+  logout = (user) => {
+    const { socket } = this.state;
+    socket.emit('USER_DISCONNECTED', user);
+    this.setState({user: null});
+  }
+
+  render() {
+    const {user} = this.props;
+    return (
+      <div className='app'>
+        {!user ? <LoginForm /> :
+          <div className='chat'>
+            <UserList/>
+            <ChatRoom/>
+          </div>}
+      </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = (state = {}) => {
+  return {user: state.user};
+};
+
+export default connect(mapStateToProps)(App);
