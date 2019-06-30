@@ -44,7 +44,7 @@ export const createSocketIO = (socketUrl) =>  {
 
 		switch (action.type) {
 			case USER_VERIFY:
-				socket.emit(USER_VERIFY, action.payload, setUser);
+				socket.emit(USER_VERIFY, action.payload.trim(), setUser);
 				return false;
 			case MESSAGE_SEND:
 				socket.emit(MESSAGE_SEND, action.payload);
