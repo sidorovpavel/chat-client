@@ -12,7 +12,7 @@ class LoginForm extends React.Component {
 	}
 
 	handleSubmit = (e) => {
-		const nickname = this.input.current.value;
+		const nickname = this.input.current.value.trim();
 		e.preventDefault();
 		if (nickname !== '') {
 			this.props.setUser(nickname);

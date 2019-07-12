@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import './ChatRoom.css'
 import {liveModeToggle, messageSend, messageShift} from "../../store/actions";
 import {Message} from "../../components/Message";
-import {NUMBER_SHIFT_MESSAGES} from "../../store/const";
+import {MESSAGE_MAX_LENGTH, NUMBER_SHIFT_MESSAGES} from "../../store/const";
 import {getIsReachedBegin, getIsReachedEnd} from "../../store/selectors";
 
 const SHIFT_OFFSET_PERCENT = 15;
@@ -19,10 +19,10 @@ class ChatRoom extends Component {
 
 	handleSubmit = (e) => {
 		const {user, messageSend, } = this.props;
-		const {value: text} = this.textInput.current;
+		const text = this.textInput.current.value.trim();
 		e.preventDefault();
 		if (text !== '') {
-			messageSend(user, text);
+			messageSend(user, text.substr(0, MESSAGE_MAX_LENGTH));
 			this.textInput.current.value = '';
 		}
 	};
@@ -145,7 +145,7 @@ class ChatRoom extends Component {
 				</div>
 				<div className='sender'>
 					<form onSubmit={this.handleSubmit}>
-						<input ref={this.textInput} type='text' placeholder='Введите сообщение' />
+						<input ref={this.textInput} type='text' placeholder='Введите сообщение' maxLength={MESSAGE_MAX_LENGTH}/>
 						<input type='submit' value='Отправить' />
 					</form>
 				</div>
